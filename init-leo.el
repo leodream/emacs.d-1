@@ -1,11 +1,14 @@
 (require-package 'goto-last-change)
 (require-package 'ecb)
+(require-package 'yasnippet)
+(require-package 'groovy-mode)
+(require-package 'emacs-eclim)
+(require-package 'company)
 
 ;; Goto-the-last-change
 (load-file (expand-file-name "~/.emacs.d/goto-last-change.el"))
 (require 'goto-last-change)
 (global-set-key (kbd "C-x C-_") 'goto-last-change)
-
 
 
 ;; ECB Setting
@@ -15,6 +18,54 @@
  '(ecb-windows-width 0.25))
 
 
+;; YASnippet Setting
+(require 'yasnippet)
+(yas-global-mode 1)
+
+
+;; groovy-mode setting
+;; (autoload 'groovy-mode "groovy-mode" "Major mode for editing Groovy code." t)
+;; (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
+;; (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode))
+(add-auto-mode 'groovy-mode "\\.groovy\\'")
+
+;;; make Groovy mode electric by default.
+(add-hook 'groovy-mode-hook
+          '(lambda ()
+             (require 'groovy-electric)
+             (groovy-electric-mode)))
+
+
+;; emacs-eclim setting
+(require 'eclim)
+(require 'eclimd)
+
+;; (custom-set-variables
+;;  '(eclim-eclipse-dirs '("~/Software/eclipse")))
+
+;; Variables
+(setq eclim-auto-save t
+      eclim-executable "/home/leo/Software/eclipse/eclim"
+      eclimd-executable "/home/leo/Software/eclipse/eclimd"
+      eclimd-wait-for-process nil
+      eclimd-default-workspace "/home/leo/Program/MyEclipse 10backup"
+      eclim-use-yasnippet nil
+      help-at-pt-display-when-idle t
+      help-at-pt-timer-delay 0.1
+      )
+
+(add-auto-mode 'eclim-mode "\\.java\\'")
+
+;; Hook eclim up with auto complete mode
+(require 'auto-complete-config)
+(ac-config-default)
+(require 'ac-emacs-eclim-source)
+(ac-emacs-eclim-config)
+
+(require 'company)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
+(global-company-mode t)
 
 ;; re-open file if it is read-only
 ;; TODO cannot use this feature in ido-find-file
@@ -54,5 +105,6 @@
     (goto-char point)
     (set-window-start nil window-start) )) ; nil - the selected window
 
+(global-linum-mode 1)
 
 (provide 'init-leo)
