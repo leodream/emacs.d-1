@@ -6,6 +6,7 @@
  (fullframe ibuffer ibuffer-quit))
 
 (require-package 'ibuffer-vc)
+(require-package 'ibuffer-git)
 
 (defun ibuffer-set-up-preferred-filters ()
   (ibuffer-vc-set-filter-groups-by-vc-root)
@@ -30,7 +31,8 @@
 ;; Explicitly require ibuffer-vc to get its column definitions, which
 ;; can't be autoloaded
 (after-load 'ibuffer
-  (require 'ibuffer-vc))
+  (require 'ibuffer-vc)
+  (require 'ibuffer-git))
 
 ;; Modify the default ibuffer-formats (toggle with `)
 (setq ibuffer-formats
@@ -41,6 +43,8 @@
               " "
               (mode 16 16 :left :elide)
               " "
+              (vc-status 16 16 :left)
+              " "
               filename-and-process)
         (mark modified read-only vc-status-mini " "
               (name 18 18 :left :elide)
@@ -50,6 +54,8 @@
               (mode 16 16 :left :elide)
               " "
               (vc-status 16 16 :left)
+              " "
+              (git-status 16 16 :left)
               " "
               filename-and-process)))
 

@@ -72,5 +72,20 @@ Call a second time to restore the original window configuration."
 
 (windmove-default-keybindings 'control)
 
+(global-set-key (kbd "C-c u") 'winner-undo)
+(global-set-key (kbd "C-c r") 'winner-redo)
+
+;; batter window navigation
+(windmove-default-keybindings)
+    (global-set-key (kbd "C-S-h")  'windmove-left)
+    (global-set-key (kbd "C-S-l") 'windmove-right)
+    (global-set-key (kbd "C-S-k")    'windmove-up)
+    (global-set-key (kbd "C-S-j")  'windmove-down)
+
+;; window management
+(global-set-key (kbd "C-M-h") 'shrink-window-horizontally)
+(global-set-key (kbd "C-M-l") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-M-j") 'shrink-window)
+(global-set-key (kbd "C-M-k") 'enlarge-window)
 
 (provide 'init-windows)
