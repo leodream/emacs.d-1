@@ -15,6 +15,7 @@
 (global-set-key (kbd "C-x C-_") 'goto-last-change)
 
 
+
 ;;----------------------------------------------------------------------------
 ;; ECB Setting
 ;;----------------------------------------------------------------------------
@@ -23,10 +24,11 @@
  '(ecb-source-path (quote ("/home/leo/Program" ("/home/leo/Program/TestProject" "yes"))))
  '(ecb-windows-width 0.25))
 
-;; Make Winner mode runable after ecb-deactivate
+;; Make Winner mode runable axfter ecb-deactivate
 (add-hook 'ecb-deactivate-hook
           '(lambda ()
              (ecb-disable-advices 'ecb-winman-not-supported-function-advices t)))
+
 
 
 ;;----------------------------------------------------------------------------
@@ -34,6 +36,7 @@
 ;;----------------------------------------------------------------------------
 (require 'yasnippet)
 (yas-global-mode 1)
+
 
 
 ;;----------------------------------------------------------------------------
@@ -49,6 +52,7 @@
           '(lambda ()
              (require 'groovy-electric)
              (groovy-electric-mode)))
+
 
 
 ;;----------------------------------------------------------------------------
