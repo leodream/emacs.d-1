@@ -5,7 +5,7 @@
 (require-package 'emacs-eclim)
 (require-package 'company)
 (require-package 'popup-kill-ring)
-
+(require-package 'ggtags)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
@@ -24,7 +24,7 @@
  '(ecb-source-path (quote ("/home/leo/Program" ("/home/leo/Program/TestProject" "yes"))))
  '(ecb-windows-width 0.25))
 
-;; Make Winner mode runable axfter ecb-deactivate
+;; Make Winner mode runable after ecb-deactivate
 (add-hook 'ecb-deactivate-hook
           '(lambda ()
              (ecb-disable-advices 'ecb-winman-not-supported-function-advices t)))
@@ -87,6 +87,19 @@
 (require 'company-emacs-eclim)
 (company-emacs-eclim-setup)
 (global-company-mode t)
+
+
+
+;;----------------------------------------------------------------------------
+;; Tags Setting
+;;----------------------------------------------------------------------------
+(require 'ggtags)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))))
+;; Go to the package description for more detial
+
 
 
 
