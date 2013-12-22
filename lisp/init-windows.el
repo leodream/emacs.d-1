@@ -88,4 +88,10 @@ Call a second time to restore the original window configuration."
 (global-set-key (kbd "C-M-j") 'shrink-window)
 (global-set-key (kbd "C-M-k") 'enlarge-window)
 
+;; move buffers
+(global-set-key (kbd "C-M-S-h") 'buf-move-left)
+(global-set-key (kbd "C-M-S-l") 'buf-move-right)
+(global-set-key (kbd "C-M-S-j") 'buf-move-down)
+(global-set-key (kbd "C-M-S-k") 'buf-move-up)
+
 (provide 'init-windows)
