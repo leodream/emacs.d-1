@@ -6,11 +6,12 @@
 (require-package 'company)
 (require-package 'popup-kill-ring)
 (require-package 'ggtags)
+(require-package 'w3m)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
 ;;----------------------------------------------------------------------------
-(load-file (expand-file-name "~/.emacs.d/goto-last-change.el"))
+;;(load-file (expand-file-name "~/.emacs.d/goto-last-change.el"))
 (require 'goto-last-change)
 (global-set-key (kbd "C-x C-_") 'goto-last-change)
 
@@ -143,5 +144,40 @@
     (set-window-start nil window-start) )) ; nil - the selected window
 
 (global-linum-mode 1)
+
+
+
+;;----------------------------------------------------------------------------
+;; newsticker and w3m
+;;----------------------------------------------------------------------------
+(require 'newsticker)
+(require 'w3m)
+
+(autoload 'w3m-region "w3m" nil t)
+(setq newsticker-html-renderer 'w3m-region)
+(setq w3m-default-display-inline-images t)
+
+(setq w3m-display-inline-images t)
+
+
+
+
+;;----------------------------------------------------------------------------
+;; sdcv
+;;----------------------------------------------------------------------------
+(load-file (expand-file-name "~/.emacs.d/sdcv.el"))
+(load-file (expand-file-name "~/.emacs.d/showtip.el"))
+(require 'sdcv)
+(require 'showtip)
+(global-set-key (kbd "C-c d") 'sdcv-search-pointer+)
+(global-set-key (kbd "C-c D") 'sdcv-search-pointer)
+(global-set-key (kbd "C-c i") 'sdcv-search-input)
+(global-set-key (kbd "C-c I") 'sdcv-search-input+)
+(setq sdcv-dictionary-simple-list        ;; a simple dictionary list
+      '(
+        "朗道英汉字典5.0"
+        ))
+
+
 
 (provide 'init-leo)
