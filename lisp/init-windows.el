@@ -89,6 +89,8 @@ Call a second time to restore the original window configuration."
 (global-set-key (kbd "C-M-k") 'enlarge-window)
 
 ;; move buffers
+(require-package 'buffer-move)
+(require 'buffer-move)
 (global-set-key (kbd "C-M-S-h") 'buf-move-left)
 (global-set-key (kbd "C-M-S-l") 'buf-move-right)
 (global-set-key (kbd "C-M-S-j") 'buf-move-down)
