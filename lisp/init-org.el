@@ -125,9 +125,9 @@ typical word processor."
 ;;; To-do settings
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
-              (sequence "PROJECT(p)" "|" "DONE(d!/!)" "CANCELLED(c@/!)")
-              (sequence "WAITING(w@/!)" "HOLD(h)" "|" "CANCELLED(c@/!)"))))
+      (quote ((sequence "TODO(t)" "NEEDPLAN(p)" "NEXTACTION(n)" "|" "DONE(d!/!)")
+              (sequence "WAITING(w@/!)" "STARTED(s!)" "SOMEDAY(S)" "PROJECT(P@)" "|" "CANCELLED(c@/!)"))))
+
 
 (setq org-todo-keyword-faces
       (quote (("NEXT" :inherit warning)
@@ -375,5 +375,25 @@ typical word processor."
                             ;; turn on indent mode by default
                             (org-indent-mode t)
                             ))
+
+;; Setting for Mobile Org
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
+(setq org-mobile-inbox-for-pull "~/Dropbox/MobileOrg/inbox.org")
+
+(setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org")))
+(setq org-directory "/home/leo/Dropbox/notes")
+(setq org-enforce-todo-dependencies t)
+(setq org-mobile-directory "~/Dropbox/mobileorg")
+(setq org-mobile-inbox-for-pull "~/Dropbox/mobileorg/mobileorg.org")
+
+
+;; Change TODO to DONE automatically after all subtask are done.
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+
 
 (provide 'init-org)
