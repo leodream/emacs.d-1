@@ -128,6 +128,13 @@ typical word processor."
       (quote ((sequence "TODO(t)" "NEEDPLAN(p)" "NEXTACTION(n)" "|" "DONE(d!/!)")
               (sequence "WAITING(w@/!)" "STARTED(s!)" "SOMEDAY(S)" "PROJECT(P@)" "|" "CANCELLED(c@/!)"))))
 
+;; Change TODO to DONE automatically after all subtask are done.
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 
 (setq org-todo-keyword-faces
       (quote (("NEXT" :inherit warning)
@@ -376,7 +383,8 @@ typical word processor."
                             (org-indent-mode t)
                             ))
 
-;; Setting for Mobile Org
+
+;;;; Mobile Org
 (setq org-mobile-directory "~/Dropbox/MobileOrg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/MobileOrg/inbox.org")
 
@@ -386,14 +394,29 @@ typical word processor."
 (setq org-mobile-directory "~/Dropbox/mobileorg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/mobileorg/mobileorg.org")
 
+;; push and pull everytime start and quit emacs
+(add-hook 'after-init-hook 'org-mobile-pull)
+(add-hook 'kill-emacs-hook 'org-mobile-push)
 
-;; Change TODO to DONE automatically after all subtask are done.
-(defun org-summary-todo (n-done n-not-done)
-  "Switch entry to DONE when all subentries are done, to TODO otherwise."
-  (let (org-log-done org-log-states)   ; turn off logging
-    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-
-(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+;; mobile sync
+(defvar org-mobile-sync-timer nil)
+;; sync if emacs has entered idle state for 10 mins
+(defvar org-mobile-sync-idle-secs (* 60 10))
+(defun org-mobile-sync ()
+  (interactive)
+  (org-mobile-pull)
+  (org-mobile-push))
+(defun org-mobile-sync-enable ()
+  "enable mobile org idle sync"
+  (interactive)
+  (setq org-mobile-sync-timer
+        (run-with-idle-timer org-mobile-sync-idle-secs t
+                             'org-mobile-sync)));
+(defun org-mobile-sync-disable ()
+  "disable mobile org idle sync"
+  (interactive)
+  (cancel-timer org-mobile-sync-timer))
+(org-mobile-sync-enable)
 
 
 (provide 'init-org)

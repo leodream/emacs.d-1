@@ -41,3 +41,5 @@ site-lisp/package/
 /recentf
 /viper
 *.bak
+/plugins
+wget-log*
