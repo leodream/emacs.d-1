@@ -136,6 +136,47 @@ typical word processor."
 
 (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 
+(setq org-tag-persistent-alist '((:startgroup . nil)
+                      ("acg" . ?A)
+                      (:grouptags . nil)
+                      ("animate" . ?a)
+                      ("comics" . ?c)
+                      ("game" . nil)
+                      ("music" . ?m)
+                      (:endgroup . nil)
+
+                      (:startgroup . nil)
+                      ("learn" . ?l)
+                      ("work" . ?w)
+                      ("life" . ?f)
+                      (:endgroup . nil)
+
+                      (:startgroup . nil)
+                      ("L_term" . nil)
+                      ("S_term" . nil)
+                      (:endgroup . nil)
+
+                      ("programming" . ?p)
+                      ("shell" . ?s)
+                      ("emacs" . ?e)
+                      ("linux" . ?L)
+                      ("git" . ?g)
+                      ("reading" . ?r)
+
+                      (:newline . nil)
+
+                      ("@offic" . ?o)
+                      ("@home" . ?h)
+                      ("@pc" . ?p)
+
+                      (:newline . nil)
+
+                      ("#MIT#" . ?M)
+                      ("#TOBE#" . ?T)
+                      ("#URGENT#" . ?U)
+
+                      ))
+
 (setq org-todo-keyword-faces
       (quote (("NEXT" :inherit warning)
               ("PROJECT" :inherit font-lock-string-face))))
@@ -385,18 +426,16 @@ typical word processor."
 
 
 ;;;; Mobile Org
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
-(setq org-mobile-inbox-for-pull "~/Dropbox/MobileOrg/inbox.org")
-
 (setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org")))
 (setq org-directory "/home/leo/Dropbox/notes")
 (setq org-enforce-todo-dependencies t)
 (setq org-mobile-directory "~/Dropbox/mobileorg")
-(setq org-mobile-inbox-for-pull "~/Dropbox/mobileorg/mobileorg.org")
+(setq org-mobile-inbox-for-pull "~/Dropbox/mobileorg/from-mobil.org")
 
 ;; push and pull everytime start and quit emacs
-(add-hook 'after-init-hook 'org-mobile-pull)
-(add-hook 'kill-emacs-hook 'org-mobile-push)
+;; causing desktop not save
+;;(add-hook 'after-init-hook 'org-mobile-pull)
+;;(add-hook 'kill-emacs-hook 'org-mobile-push)
 
 ;; mobile sync
 (defvar org-mobile-sync-timer nil)
