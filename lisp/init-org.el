@@ -156,7 +156,7 @@ typical word processor."
                                  ("S_term" . nil)
                                  (:endgroup . nil)
 
-                                 ("programming" . ?p)
+                                 ("hacking" . ?p)
                                  ("shell" . ?s)
                                  ("emacs" . ?e)
                                  ("linux" . ?L)
@@ -457,5 +457,6 @@ typical word processor."
   (cancel-timer org-mobile-sync-timer))
 (org-mobile-sync-enable)
 
+(require 'org-depend)
 
 (provide 'init-org)
