@@ -22,7 +22,6 @@
 ;;----------------------------------------------------------------------------
 (require 'ecb-autoloads)
 (custom-set-variables
- '(ecb-source-path (quote ("/home/leo/Program" ("/home/leo/Program/TestProject" "yes"))))
  '(ecb-windows-width 0.25))
 
 ;; Make Winner mode runable after ecb-deactivate
@@ -36,23 +35,7 @@
 ;; YASnippet Setting
 ;;----------------------------------------------------------------------------
 (require 'yasnippet)
-(yas-global-mode 1)
-
-
-
-;;----------------------------------------------------------------------------
-;; groovy-mode setting
-;;----------------------------------------------------------------------------
-;; (autoload 'groovy-mode "groovy-mode" "Major mode for editing Groovy code." t)
-;; (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
-;; (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode))
-(add-auto-mode 'groovy-mode "\\.groovy\\'")
-
-;;; make Groovy mode electric by default.
-(add-hook 'groovy-mode-hook
-          '(lambda ()
-             (require 'groovy-electric)
-             (groovy-electric-mode)))
+;;(yas-global-mode 1)
 
 
 
@@ -70,13 +53,11 @@
       eclim-executable "/home/leo/Software/eclipse/eclim"
       eclimd-executable "/home/leo/Software/eclipse/eclimd"
       eclimd-wait-for-process nil
-      eclimd-default-workspace "/home/leo/Program/MyEclipse 10backup"
       eclim-use-yasnippet nil
       help-at-pt-display-when-idle t
       help-at-pt-timer-delay 0.1
       )
 
-(add-auto-mode 'eclim-mode "\\.java\\'")
 
 ;; Hook eclim up with auto complete mode
 (require 'auto-complete-config)
@@ -84,22 +65,20 @@
 (require 'ac-emacs-eclim-source)
 (ac-emacs-eclim-config)
 
-(require 'company)
-(require 'company-emacs-eclim)
-(company-emacs-eclim-setup)
-(global-company-mode t)
-
 
 
 ;;----------------------------------------------------------------------------
 ;; Tags Setting
 ;;----------------------------------------------------------------------------
 (require 'ggtags)
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p'c-mode 'c++-mode 'java-mode)
-              (ggtags-mode 1))))
-;; Go to the package description for more detial
+(add-auto-mode 'java-mode "\\.java\\'")
+(add-hook 'java-mode-hook '(lambda ()
+                             (setq tab-width 4)
+                             (eclim-mode t)
+                             (ggtags-mode t)))
+
+(add-hook 'nxml-mode-hook '(lambda ()
+                             (setq tab-width 4)))
 
 
 
