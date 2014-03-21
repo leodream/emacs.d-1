@@ -126,8 +126,8 @@ typical word processor."
 ;;; To-do settings
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEEDPLAN(p)" "NEXTACTION(n)" "|" "DONE(d!/!)")
-              (sequence "WAITING(w@/!)" "STARTED(s!)" "SOMEDAY(S)" "PROJECT(P@)" "|" "CANCELLED(c@/!)"))))
+      (quote ((sequence "TODO(t)" "NEEDPLAN(p)" "READY(r)" "|" "DONE(d!/!)")
+              (sequence "WAITING(w@/!)" "BEGINED(b!)" "SOMEDAY(s)" "PROJECT(P@)" "|" "CANCELLED(c@/!)"))))
 
 ;; Change TODO to DONE automatically after all subtask are done.
 (defun org-summary-todo (n-done n-not-done)
