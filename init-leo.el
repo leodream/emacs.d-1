@@ -129,10 +129,10 @@
 ;;----------------------------------------------------------------------------
 ;; sdcv
 ;;----------------------------------------------------------------------------
-(load-file (expand-file-name "~/.emacs.d/sdcv.el"))
 (load-file (expand-file-name "~/.emacs.d/showtip.el"))
-(require 'sdcv)
+(load-file (expand-file-name "~/.emacs.d/sdcv.el"))
 (require 'showtip)
+(require 'sdcv)
 (global-set-key (kbd "C-c d") 'sdcv-search-pointer+)
 (global-set-key (kbd "C-c D") 'sdcv-search-pointer)
 (global-set-key (kbd "C-c i") 'sdcv-search-input)
