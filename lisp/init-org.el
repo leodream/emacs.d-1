@@ -127,7 +127,8 @@ typical word processor."
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEEDPLAN(n)" "READY(r)" "|" "DONE(d!/!)")
-              (sequence "WAITING(w@/!)" "BEGINED(b!)" "SOMEDAY(s)" "PROJECT(p@)" "|" "CANCELLED(c@/!)"))))
+              (sequence "WAITING(w@/!)" "BEGINED(b!)" "PROJECT(p)" "SOMEDAY(s)" "|" "CANCELLED(c@/!)"))))
+
 
 ;; Change TODO to DONE automatically after all subtask are done.
 (defun org-summary-todo (n-done n-not-done)
@@ -270,6 +271,10 @@ typical word processor."
 (setq org-clock-persist t)
 (setq org-clock-in-resume t)
 
+(setq org-clock-idle-time 10)
+
+;; Change task state to BEGINED when clocking in
+(setq org-clock-in-switch-to-state "BEGINED")
 ;; Save clock data and notes in the LOGBOOK drawer
 (setq org-clock-into-drawer t)
 ;; Save state changes in the LOGBOOK drawer
