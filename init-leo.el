@@ -7,6 +7,10 @@
 (require-package 'popup-kill-ring)
 (require-package 'ggtags)
 (require-package 'w3m)
+(require-package 'fold-this)
+(require-package 'fold-dwim)
+(require-package 'fold-dwim-org)
+(require-package 'hide-lines)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
@@ -81,6 +85,64 @@
                              (setq tab-width 4)))
 
 
+;;----------------------------------------------------------------------------
+;; hs-mode Setting
+;;----------------------------------------------------------------------------
+(defun toggle-selective-display (column)
+  (interactive "P")
+s  (set-selective-display
+   (or column
+       (unless selective-display
+         (1+ (current-column))))))
+
+(defun toggle-hiding (column)
+  (interactive "P")
+  (if hs-minor-mode
+      (if (condition-case nil
+              (hs-toggle-hiding)
+            (error t))
+          (hs-show-all))
+    (toggle-selective-display column)))
+
+(global-set-key (kbd "M-9") 'fold-dwim-toggle)
+
+;; Hide the comments too when you do a 'hs-hide-all'
+(setq hs-hide-comments nil)
+;; Set whether isearch opens folded comments, code, or both
+;; where x is code, comments, t (both), or nil (neither)
+(setq hs-isearch-open t)
+;; Add more here
+
+;; Displaying overlay content in echo area or tooltip
+(defun display-code-line-counts (ov)
+  (when (eq 'code (overlay-get ov 'hs))
+    (overlay-put ov 'help-echo
+                 (buffer-substring (overlay-start ov)
+                                   (overlay-end ov)))))
+
+(setq hs-set-up-overlay 'display-code-line-counts)
+(add-hook 'c-mode-common-hook   'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+(add-hook 'java-mode-hook       'hs-minor-mode)
+(add-hook 'lisp-mode-hook       'hs-minor-mode)
+(add-hook 'perl-mode-hook       'hs-minor-mode)
+(add-hook 'sh-mode-hook         'hs-minor-mode)
+
+(add-hook 'groovy-mode-hook     'highlight-symbol-mode)
+(add-hook 'groovy-mode-hook     'highlight-symbol-nav-mode)
+
+(add-hook 'c-mode-common-hook   'fold-dwim-org/minor-mode)
+(add-hook 'emacs-lisp-mode-hook 'fold-dwim-org/minor-mode)
+(add-hook 'java-mode-hook       'fold-dwim-org/minor-mode)
+(add-hook 'lisp-mode-hook       'fold-dwim-org/minor-mode)
+(add-hook 'perl-mode-hook       'fold-dwim-org/minor-mode)
+(add-hook 'sh-mode-hook         'fold-dwim-org/minor-mode)
+
+
+(defun find-adexc-file (pattern)
+  (interactive (list (read-string "Pattern of the file name:")))
+  (find-dired "/home/leo/Program/src/ADExchange_git/ADExchange"
+              (concatenate 'string "-iname \"*" pattern "*\"")))
 
 
 ;;----------------------------------------------------------------------------
