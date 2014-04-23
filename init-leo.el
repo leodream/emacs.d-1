@@ -337,5 +337,14 @@ nil are ignored."
 
 (menu-bar-mode -1)
 
+;;----------------------------------------------------------------------------
+;; Holidays
+;;----------------------------------------------------------------------------
+(require 'cal-china-x)
+(setq mark-holidays-in-calendar t)
+(setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
+;;(setq holiday-other-holidays cal-china-x-chinese-holidays)
+(setq calendar-holidays cal-china-x-important-holidays)
+
 
 (provide 'init-leo)
