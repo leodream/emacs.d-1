@@ -9,6 +9,9 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c a") 'org-agenda)
 
+(setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org")))
+(setq org-directory "/home/leo/Dropbox/notes")
+
 ;; Various preferences
 (setq org-log-done t
       org-completion-use-ido t
@@ -102,7 +105,7 @@ typical word processor."
 
 (setq org-refile-use-cache nil)
 
-; Targets include this file and any file contributing to the agenda - up to 5 levels deep
+;; Targets include this file and any file contributing to the agenda - up to 5 levels deep
 (setq org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5)))
 
 (after-load 'org-agenda
@@ -262,6 +265,18 @@ typical word processor."
 
 
 (add-hook 'org-agenda-mode-hook 'hl-line-mode)
+
+;; Strike through headlines for DONE tasks in Org
+;; http://sachachua.com/blog/2012/12/emacs-strike-through-headlines-for-done-tasks-in-org/
+(setq org-fontify-done-headline t)
+(custom-set-faces
+ '(org-done ((t (:foreground "PaleGreen"
+                 :weight normal
+                 :strike-through t))))
+ '(org-headline-done
+            ((((class color) (min-colors 16) (background dark))
+               (:foreground "LightSalmon" :strike-through t)))))
+
 
 
 ;;; Org clock
@@ -432,8 +447,6 @@ typical word processor."
 
 
 ;;;; Mobile Org
-(setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org")))
-(setq org-directory "/home/leo/Dropbox/notes")
 (setq org-enforce-todo-dependencies t)
 (setq org-mobile-directory "~/Dropbox/mobileorg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/mobileorg/from-mobil.org")
