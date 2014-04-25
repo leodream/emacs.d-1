@@ -129,7 +129,7 @@ typical word processor."
 ;;; To-do settings
 
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEEDPLAN(n)" "READY(r)" "|" "DONE(d!/!)")
+      (quote ((sequence "TODO(t)" "TOBREAKDOWN(o)" "READY(r)" "|" "DONE(d!/!)")
               (sequence "WAITING(w@/!)" "BEGINED(b!)" "PROJECT(p)" "SOMEDAY(s)" "|" "CANCELLED(c@/!)"))))
 
 
@@ -145,7 +145,7 @@ typical word processor."
                                  ("acg" . ?A)
                                  (:grouptags . nil)
                                  ("animate" . ?a)
-                                 ("comics" . ?c)
+                                 ("comics" . ?C)
                                  ("game" . nil)
                                  ("music" . ?m)
                                  (:endgroup . nil)
@@ -161,7 +161,7 @@ typical word processor."
                                  ("S_term" . nil)
                                  (:endgroup . nil)
 
-                                 ("hacking" . ?p)
+                                 ("coding" . ?c)
                                  ("shell" . ?s)
                                  ("emacs" . ?e)
                                  ("linux" . ?L)
@@ -182,100 +182,99 @@ typical word processor."
 
                                  ))
 
-(setq org-todo-keyword-faces
-      (quote (("NEXT" :inherit warning)
-              ("PROJECT" :inherit font-lock-string-face))))
+(defun sacha/org-agenda-skip-scheduled ()
+  (org-agenda-skip-entry-if 'scheduled 'deadline 'regexp "\n]+>"))
+
+(defvar sacha/org-agenda-limit-items nil "Number of items to show in agenda to-do views; nil if unlimited.")
+
+(defvar sacha/org-agenda-contexts
+  '((tags-todo "+@learn")
+    (tags-todo "+@work")
+    (tags-todo "+@reading")
+    (tags-todo "+@hacking")
+    (tags-todo "+@computer")
+    (tags-todo "+@home"))
+  "Usual list of contexts.")
 
 
 
 ;;; Agenda views
 
+(setq org-agenda-compact-blocks t
+      org-agenda-sticky t
+      org-agenda-start-on-weekday nil
+      org-agenda-span 'day
+      org-agenda-include-diary nil
+      org-agenda-sorting-strategy
+      '((agenda habit-down time-up user-defined-up effort-up category-keep)
+        (todo category-up effort-up)
+        (tags category-up effort-up)
+        (search category-up))
+      org-agenda-window-setup 'current-window
+      org-agenda-custom-commands
+      '(
+        ("u" "Timeline for today and tasks that under going"
+         ((agenda "" )
+          (todo "BEGINED")
+          (todo "READY"))
+         ((org-agenda-ndays 1)
+          (org-agenda-show-log t)
+          (org-agenda-clockreport-mode t)
+          (org-agenda-log-mode-items '(clock closed))))
 
-(let ((active-project-match "-INBOX/PROJECT"))
+        ("w" "Weekly Review"
+         ((agenda ""
+                  ((org-agenda-ndays 7)          ;; review upcoming deadlines and appointments
+                   (org-agenda-show-log t)
+                   ;;                   (org-agenda-start-on-weekday 1) ;; agenda start with monday
+                   (org-agenda-log-mode-items '(clock closed))
+                   (org-agenda-clockreport-mode t)
+                   (org-agenda-repeating-timestamp-show-all nil)));; ensures that repeating events appear only once
 
-  (setq org-stuck-projects
-        `(,active-project-match ("NEXT")))
+          (todo "PROJECT") ;; review all projects (assuming you use todo keywords to designate projects)
+          (tags-todo "-SCHEDULED={.+}/+BEGINED")
+          (tags-todo "-SCHEDULED={.+}/+READY")
+          (tags-todo "-SCHEDULED={.+}/+WAITING")
+          (tags-todo "-SCHEDULED={.+}/+TOBREAKDOWN")
+          (tags-todo "-SCHEDULED={.+}/+SOMEDAY")
+          (tags-todo "-SCHEDULED={.+}/+TODO")))
 
-  (setq org-agenda-compact-blocks t
-        org-agenda-sticky t
-        org-agenda-start-on-weekday nil
-        org-agenda-span 'day
-        org-agenda-include-diary nil
-        org-agenda-sorting-strategy
-        '((agenda habit-down time-up user-defined-up effort-up category-keep)
-          (todo category-up effort-up)
-          (tags category-up effort-up)
-          (search category-up))
-        org-agenda-window-setup 'current-window
-        org-agenda-custom-commands
-        `(("N" "Notes" tags "NOTE"
-           ((org-agenda-overriding-header "Notes")
-            (org-tags-match-list-sublevels t)))
-          ("g" "GTD"
-           ((agenda "" nil)
-            (tags "INBOX"
-                  ((org-agenda-overriding-header "Inbox")
-                   (org-tags-match-list-sublevels nil)))
-            (stuck ""
-                   ((org-agenda-overriding-header "Stuck Projects")
-                    (org-agenda-tags-todo-honor-ignore-options t)
-                    (org-tags-match-list-sublevels t)
-                    (org-agenda-todo-ignore-scheduled 'future)))
-            (tags-todo "-INBOX/NEXT"
-                       ((org-agenda-overriding-header "Next Actions")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)
-                        ;; TODO: skip if a parent is WAITING or HOLD
-                        (org-tags-match-list-sublevels t)
-                        (org-agenda-sorting-strategy
-                         '(todo-state-down effort-up category-keep))))
-            (tags-todo ,active-project-match
-                       ((org-agenda-overriding-header "Projects")
-                        (org-tags-match-list-sublevels t)
-                        (org-agenda-sorting-strategy
-                         '(category-keep))))
-            (tags-todo "-INBOX/-NEXT"
-                       ((org-agenda-overriding-header "Orphaned Tasks")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)
-                        ;; TODO: skip if a parent is a project
-                        (org-agenda-skip-function
-                         '(lambda ()
-                            (or (org-agenda-skip-subtree-if 'todo '("PROJECT" "HOLD" "WAITING"))
-                                (org-agenda-skip-subtree-if 'nottododo '("TODO")))))
-                        (org-tags-match-list-sublevels t)
-                        (org-agenda-sorting-strategy
-                         '(category-keep))))
-            (tags-todo "/WAITING"
-                       ((org-agenda-overriding-header "Waiting")
-                        (org-agenda-tags-todo-honor-ignore-options t)
-                        (org-agenda-todo-ignore-scheduled 'future)
-                        (org-agenda-sorting-strategy
-                         '(category-keep))))
-            (tags-todo "-INBOX/HOLD"
-                       ((org-agenda-overriding-header "On Hold")
-                        ;; TODO: skip if a parent is WAITING or HOLD
-                        (org-tags-match-list-sublevels nil)
-                        (org-agenda-sorting-strategy
-                         '(category-keep))))
-            ;; (tags-todo "-NEXT"
-            ;;            ((org-agenda-overriding-header "All other TODOs")
-            ;;             (org-match-list-sublevels t)))
-            )))))
+        ("x" "Items that under going" todo "READY|BEGINED")
 
+        ("P" "By priority"
+         ((tags-todo "+PRIORITY=\"A\"")
+          (tags-todo "+PRIORITY=\"B\"")
+          (tags-todo "+PRIORITY=\"\"")
+          (tags-todo "+PRIORITY=\"C\""))
+         ((org-agenda-prefix-format "%-10c %-10T %e ")
+          (org-agenda-sorting-strategy '(priority-down tag-up category-keep effort-down))))
 
-(add-hook 'org-agenda-mode-hook 'hl-line-mode)
+        ("g" . "Go to specific category")
+        ("ge" "Entertainment" tags-todo "CATEGORY=\"Play\"")
+        ("gw" "Work" tags-todo "CATEGORY=\"Work\"")
+        ("gl" "Learn" tags-todo "CATEGORY=\"Learn\"")
+        ("gL" "Life" tags-todo "CATEGORY=\"Life\"")
+        ("gp" "Practice" tags-todo "CATEGORY=\"Practice\"")
+
+        ("n" "Agenda and all TODO's"
+         ((agenda ""
+                  ((org-agenda-ndays 7)
+                   (org-agenda-show-log t)
+                   ))
+          (tags-todo "/-TOBREAKDOWN-SOMEDAY")))
+        ))
+
 
 ;; Strike through headlines for DONE tasks in Org
 ;; http://sachachua.com/blog/2012/12/emacs-strike-through-headlines-for-done-tasks-in-org/
 (setq org-fontify-done-headline t)
 (custom-set-faces
  '(org-done ((t (:foreground "PaleGreen"
-                 :weight normal
-                 :strike-through t))))
+                             :weight normal
+                             :strike-through t))))
  '(org-headline-done
-            ((((class color) (min-colors 16) (background dark))
-               (:foreground "LightSalmon" :strike-through t)))))
+   ((((class color) (min-colors 16) (background dark))
+     (:foreground "LightSalmon" :strike-through t)))))
 
 
 
