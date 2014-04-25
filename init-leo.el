@@ -335,7 +335,7 @@ nil are ignored."
   )
 
 
-
+(menu-bar-mode -1)
 
 
 (provide 'init-leo)
