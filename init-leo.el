@@ -344,7 +344,22 @@ nil are ignored."
 (setq mark-holidays-in-calendar t)
 (setq cal-china-x-important-holidays cal-china-x-chinese-holidays)
 ;;(setq holiday-other-holidays cal-china-x-chinese-holidays)
-(setq calendar-holidays cal-china-x-important-holidays)
+
+(setq calendar-holidays ;;cal-china-x-important-holidays
+      (append cal-china-x-important-holidays '(
+                                               (holiday-lunar 1 15 "元宵节" 0)
+                                               (holiday-lunar 7 7 "七夕" 0)
+                                               (holiday-lunar 9 9 "重阳节" 0)
+
+                                               (holiday-lunar 3 5 "Brother's Birthday" 0)
+
+                                               (holiday-chinese-winter-solstice)
+
+                                               (holiday-fixed 2 14 "Valentine's Day")
+                                               (holiday-float 5 0 2 "Mother's Day")
+                                               (holiday-float 6 0 3 "Father's Day")
+                                               (holiday-fixed 12 25 "Christmas")
+                                               )))
 
 
 (require-package 'browse-kill-ring)
