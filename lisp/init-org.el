@@ -10,7 +10,8 @@
 (define-key global-map (kbd "C-c a") 'org-agenda)
 (define-key global-map (kbd "C-c c") 'org-capture)
 
-(setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org")))
+(setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org" "~/Dropbox/notes/work.org" "~/Dropbox/notes/entertainment.org" "~/Dropbox/notes/practice.org" "~/Dropbox/notes/learning.org" "~/Dropbox/notes/life.org")))
+
 (setq org-directory "/home/leo/Dropbox/notes")
 (setq org-default-notes-file (concat org-directory "/capture.org"))
 
@@ -92,11 +93,24 @@ typical word processor."
 
 ;;; Capturing
 
-(global-set-key (kbd "C-c c") 'org-capture)
-
 (setq org-capture-templates
       '(("t" "Normal TODO item with a link"
-         entry (file+headline "~/Dropbox/notes/TODOList.org" "Life")
+         entry (file "~/Dropbox/notes/TODOList.org")
+         "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
+        ("l" "Normal Life item with a link"
+         entry (file "~/Dropbox/notes/life.org")
+         "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
+        ("w" "Normal work item with a link"
+         entry (file "~/Dropbox/notes/work.org")
+         "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
+        ("e" "Normal entertainment item with a link"
+         entry (file "~/Dropbox/notes/entertainment.org")
+         "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
+        ("p" "Normal Practice item with a link"
+         entry (file "~/Dropbox/notes/practice.org")
+         "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
+        ("L" "Normal Learning item with a link"
+         entry (file "~/Dropbox/notes/learning.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
 
         ("d" "Log the task that already done"
