@@ -482,6 +482,7 @@ typical word processor."
 (setq org-mobile-directory "~/Dropbox/mobileorg")
 (setq org-mobile-inbox-for-pull "~/Dropbox/mobileorg/from-mobil.org")
 
+(setq org-mobile-agendas '("w"))
 ;; push and pull everytime start and quit emacs
 ;; causing desktop not save
 ;;(add-hook 'after-init-hook 'org-mobile-pull)
