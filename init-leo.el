@@ -11,6 +11,7 @@
 (require-package 'fold-dwim)
 (require-package 'fold-dwim-org)
 (require-package 'hide-lines)
+(require-package 'powershell-mode)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
@@ -127,9 +128,12 @@ s  (set-selective-display
 (add-hook 'lisp-mode-hook       'hs-minor-mode)
 (add-hook 'perl-mode-hook       'hs-minor-mode)
 (add-hook 'sh-mode-hook         'hs-minor-mode)
+(add-hook 'powershell-mode-hook 'hs-minor-mode)
 
 (add-hook 'groovy-mode-hook     'highlight-symbol-mode)
 (add-hook 'groovy-mode-hook     'highlight-symbol-nav-mode)
+(add-hook 'visual-basic-mode-hook 'highlight-symbol-mode)
+(add-hook 'visual-basic-mode-hook 'highlight-symbol-nav-mode)
 
 (add-hook 'c-mode-common-hook   'fold-dwim-org/minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'fold-dwim-org/minor-mode)
@@ -137,6 +141,7 @@ s  (set-selective-display
 (add-hook 'lisp-mode-hook       'fold-dwim-org/minor-mode)
 (add-hook 'perl-mode-hook       'fold-dwim-org/minor-mode)
 (add-hook 'sh-mode-hook         'fold-dwim-org/minor-mode)
+(add-hook 'powershell-mode      'fold-dwim-org/minor-mode)
 
 
 (defun find-adexc-file (pattern)
@@ -206,6 +211,20 @@ s  (set-selective-display
         ))
 
 
+
+
+;; --------------------------------------------------------
+(require 'vbasense)
+(load-file (expand-file-name "~/.emacs.d/visual-basic-mode.el"))
+;; Keybinding
+(setq vbasense-popup-help-key "C-:")
+(setq vbasense-jump-to-definition-key "C->")
+
+;; Make config suit for you. About the config item, eval the following sexp.
+;; (customize-group "vbasense")
+
+;; Do setting a recommemded configuration
+(vbasense-config-default)
 
 
 ;;----------------------------------------------------------------------------
