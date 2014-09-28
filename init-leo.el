@@ -1,17 +1,18 @@
-(require-package 'goto-last-change)
-(require-package 'ecb)
-(require-package 'yasnippet)
-(require-package 'groovy-mode)
-(require-package 'emacs-eclim)
 (require-package 'company)
-(require-package 'popup-kill-ring)
-(require-package 'ggtags)
-(require-package 'w3m)
-(require-package 'fold-this)
+(require-package 'ecb)
+(require-package 'emacs-eclim)
 (require-package 'fold-dwim)
 (require-package 'fold-dwim-org)
+(require-package 'fold-this)
+(require-package 'ggtags)
+(require-package 'goto-last-change)
+(require-package 'groovy-mode)
 (require-package 'hide-lines)
 (require-package 'powershell-mode)
+(require-package 'vlf)
+(require-package 'w3m)
+(require-package 'yasnippet)
+(require-package 'better-registers)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
@@ -33,6 +34,24 @@
 (add-hook 'ecb-deactivate-hook
           '(lambda ()
              (ecb-disable-advices 'ecb-winman-not-supported-function-advices t)))
+
+
+
+
+;;----------------------------------------------------------------------------
+;; Highlight-symbol mode
+;;----------------------------------------------------------------------------
+;;(global-set-key [(control f3)] 'highlight-symbol-query-replace)
+(global-set-key [f3] 'highlight-symbol-at-point)
+(global-set-key [f5] 'kmacro-start-macro-or-insert-counter)
+(global-set-key [(shift f3)] 'highlight-symbol-prev)
+(global-set-key [(meta f3)] 'highlight-symbol-next)
+
+(add-hook 'groovy-mode-hook     'highlight-symbol-mode)
+(add-hook 'groovy-mode-hook     'highlight-symbol-nav-mode)
+(add-hook 'visual-basic-mode-hook 'highlight-symbol-mode)
+(add-hook 'visual-basic-mode-hook 'highlight-symbol-nav-mode)
+
 
 
 
@@ -63,7 +82,6 @@
       help-at-pt-timer-delay 0.1
       )
 
-
 ;; Hook eclim up with auto complete mode
 (require 'auto-complete-config)
 (ac-config-default)
@@ -85,13 +103,19 @@
 (add-hook 'nxml-mode-hook '(lambda ()
                              (setq tab-width 4)))
 
+(defun find-adexc-file (pattern)
+  (interactive (list (read-string "Pattern of the file name:")))
+  (find-dired "/home/leo/Program/src/ADExchange_git/ADExchange"
+              (concatenate 'string "-iname \"*" pattern "*\"")))
+
+
 
 ;;----------------------------------------------------------------------------
 ;; hs-mode Setting
 ;;----------------------------------------------------------------------------
 (defun toggle-selective-display (column)
   (interactive "P")
-s  (set-selective-display
+  (set-selective-display
    (or column
        (unless selective-display
          (1+ (current-column))))))
@@ -130,11 +154,6 @@ s  (set-selective-display
 (add-hook 'sh-mode-hook         'hs-minor-mode)
 (add-hook 'powershell-mode-hook 'hs-minor-mode)
 
-(add-hook 'groovy-mode-hook     'highlight-symbol-mode)
-(add-hook 'groovy-mode-hook     'highlight-symbol-nav-mode)
-(add-hook 'visual-basic-mode-hook 'highlight-symbol-mode)
-(add-hook 'visual-basic-mode-hook 'highlight-symbol-nav-mode)
-
 (add-hook 'c-mode-common-hook   'fold-dwim-org/minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'fold-dwim-org/minor-mode)
 (add-hook 'java-mode-hook       'fold-dwim-org/minor-mode)
@@ -143,11 +162,6 @@ s  (set-selective-display
 (add-hook 'sh-mode-hook         'fold-dwim-org/minor-mode)
 (add-hook 'powershell-mode      'fold-dwim-org/minor-mode)
 
-
-(defun find-adexc-file (pattern)
-  (interactive (list (read-string "Pattern of the file name:")))
-  (find-dired "/home/leo/Program/src/ADExchange_git/ADExchange"
-              (concatenate 'string "-iname \"*" pattern "*\"")))
 
 
 ;;----------------------------------------------------------------------------
@@ -211,20 +225,6 @@ s  (set-selective-display
         ))
 
 
-
-
-;; --------------------------------------------------------
-(require 'vbasense)
-(load-file (expand-file-name "~/.emacs.d/visual-basic-mode.el"))
-;; Keybinding
-(setq vbasense-popup-help-key "C-:")
-(setq vbasense-jump-to-definition-key "C->")
-
-;; Make config suit for you. About the config item, eval the following sexp.
-;; (customize-group "vbasense")
-
-;; Do setting a recommemded configuration
-(vbasense-config-default)
 
 
 ;;----------------------------------------------------------------------------
@@ -329,7 +329,6 @@ be prompted."
     )
   )
 
-
 (defun modified-buffers-exist()
   "This function will check to see if there are any buffers
 that have been modified.  It will return true if there are
@@ -354,7 +353,6 @@ nil are ignored."
   )
 
 
-(menu-bar-mode -1)
 
 ;;----------------------------------------------------------------------------
 ;; Holidays
@@ -381,13 +379,60 @@ nil are ignored."
                                                )))
 
 
+
+
+;;----------------------------------------------------------------------------
+;; Press % to jump to the matching (){}
+;;----------------------------------------------------------------------------
+(global-set-key "%" 'match-paren)
+
+(defun match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+        (t (self-insert-command (or arg 1)))))
+
+
+
+
+;;---------------------------------------------------------------------------
+;; browse-kill-ring
+;;---------------------------------------------------------------------------
 (require-package 'browse-kill-ring)
 (global-set-key (kbd"M-y") 'browse-kill-ring)
-(global-set-key (kbd "\C-cy") 'popup-kill-ring)
 
 
+
+
+
+;;---------------------------------------------------------------------------
+;; vlf-setting
+;;---------------------------------------------------------------------------
+;; (add-to-list 'load-path "/usr/bin/")
+
+;; (defun my-find-file-check-make-large-file-read-only-hook ()
+;;   "If a file is over a given size, make the buffer read only."
+;;   (when (> (buffer-size) (* 1024 1024))
+;;     (setq buffer-read-only t)
+;;     (buffer-disable-undo)
+;;     (fundamental-mode)))
+
+;; (add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
+(require 'vlf-integrate)
+
+
+
+
+
+
+
+;;---------------------------------------------------------------------------
+;; others
+;;---------------------------------------------------------------------------
 (require-package 'tabbar)
 
+(menu-bar-mode -1)
 
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
@@ -404,15 +449,25 @@ nil are ignored."
 
 
 
-;; Press % to jump to the matching (){}
-(global-set-key "%" 'match-paren)
+;;---------------------------------------------------------------------------
+;; copy file name
+;;---------------------------------------------------------------------------
+(defun prelude-copy-file-name-to-clipboard ()
+  "Copy the current buffer file name to the clipboard."
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (kill-new filename)
+      (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-(defun match-paren (arg)
-  "Go to the matching paren if on a paren; otherwise insert %."
-  (interactive "p")
-  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-        ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-        (t (self-insert-command (or arg 1)))))
 
-
+;;---------------------------------------------------------------------------
+;; better-registers
+;;---------------------------------------------------------------------------
+(require 'better-registers)
+(better-registers-install-save-registers-hook)
+(load better-registers-save-file)
 (provide 'init-leo)
+p
