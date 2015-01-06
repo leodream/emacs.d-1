@@ -133,9 +133,11 @@
 
 ;; Hide the comments too when you do a 'hs-hide-all'
 (setq hs-hide-comments nil)
+
 ;; Set whether isearch opens folded comments, code, or both
 ;; where x is code, comments, t (both), or nil (neither)
 (setq hs-isearch-open t)
+
 ;; Add more here
 
 ;; Displaying overlay content in echo area or tooltip
@@ -161,6 +163,10 @@
 (add-hook 'perl-mode-hook       'fold-dwim-org/minor-mode)
 (add-hook 'sh-mode-hook         'fold-dwim-org/minor-mode)
 (add-hook 'powershell-mode      'fold-dwim-org/minor-mode)
+
+
+(setq outline-regexp "\\(?:\\([ \t]*.*\\(class\\|interface\\)[ \t]+[a-zA-Z0-9_]+[ \t\n]*\\({\\|extends\\|implements\\)\\)\\|[ \t]*\\(public\\|private\\|static\\|final\\|native\\|synchronized\\|transient\\|volatile\\|strictfp\\| \\|\t\\)*[ \t]+\\(\\([a-zA-Z0-9_]\\|\\( *\t*< *\t*\\)\\|\\( *\t*> *\t*\\)\\|\\( *\t*, *\t*\\)\\|\\( *\t*\\[ *\t*\\)\\|\\(]\\)\\)+\\)[ \t]+[a-zA-Z0-9_]+[ \t]*(\\(.*\\))[ \t]*\\(throws[ \t]+\\([a-zA-Z0-9_, \t\n]*\\)\\)?[ \t\n]*{\\)" )
+
 
 
 
@@ -419,7 +425,8 @@ nil are ignored."
 ;;     (fundamental-mode)))
 
 ;; (add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
-(require 'vlf-integrate)
+(setq vlf-tune-max 1000000)
+(require 'vlf-setup)
 
 
 
@@ -431,7 +438,7 @@ nil are ignored."
 ;; others
 ;;---------------------------------------------------------------------------
 (require-package 'tabbar)
-
+(global-auto-revert-mode t)
 (menu-bar-mode -1)
 
 (setq hippie-expand-try-functions-list
@@ -463,13 +470,6 @@ nil are ignored."
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 
-;;---------------------------------------------------------------------------
-;; better-registers
-;;---------------------------------------------------------------------------
-(require 'better-registers)
-(better-registers-install-save-registers-hook)
-(load better-registers-save-file)
-
 
 (defun hide-ctrl-M ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
@@ -478,4 +478,3 @@ nil are ignored."
   (aset buffer-display-table ?\^M []))
 
 (provide 'init-leo)
-p
