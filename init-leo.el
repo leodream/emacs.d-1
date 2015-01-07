@@ -469,5 +469,13 @@ nil are ignored."
 (require 'better-registers)
 (better-registers-install-save-registers-hook)
 (load better-registers-save-file)
+
+
+(defun hide-ctrl-M ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (setq buffer-display-table (make-display-table))
+  (aset buffer-display-table ?\^M []))
+
 (provide 'init-leo)
 p
