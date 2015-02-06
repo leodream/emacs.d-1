@@ -15,6 +15,7 @@
 (require-package 'better-registers)
 (require-package 'god-mode)
 (require-package 'helm)
+(require-package 'projectile)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
@@ -450,6 +451,12 @@ nil are ignored."
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+(require 'helm-eshell)
+
+(add-hook 'eshell-mode-hook
+          #'(lambda ()
+              (define-key eshell-mode-map (kbd "C-c C-l")  'helm-eshell-history)))
+
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -459,6 +466,8 @@ nil are ignored."
 (global-set-key (kbd "C-c h o") 'helm-occur)
 (global-set-key (kbd "C-h SPC") 'helm-all-mark-rings)
 (global-set-key (kbd "C-c h x") 'helm-register)
+(global-set-key (kbd "C-c h g") 'helm-google-suggest)
+(global-set-key (kbd "C-c h M-:") 'helm-eval-expression-with-eldoc)
 
 
 (define-key shell-mode-map (kbd "C-c C-l") 'helm-comint-input-ring)
@@ -474,6 +483,7 @@ nil are ignored."
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
 (setq helm-locate-fuzzy-match t)
+(setq helm-apropos-fuzzy-match t)
 
 
 (when (executable-find "ack-grep")
@@ -490,6 +500,13 @@ nil are ignored."
       helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
       helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
       helm-ff-file-name-history-use-recentf t)
+
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+(setq projectile-switch-project-action 'helm-projectile)
+(setq projectile-enable-caching t)
 
 (helm-mode 1)
 
