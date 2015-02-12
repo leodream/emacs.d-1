@@ -70,10 +70,11 @@
 ;; emacs-eclim setting
 ;;----------------------------------------------------------------------------
 (require 'eclim)
+(global-eclim-mode)
 (require 'eclimd)
 
-;; (custom-set-variables
-;;  '(eclim-eclipse-dirs '("~/Software/eclipse")))
+(custom-set-variables
+ '(eclim-eclipse-dirs '("~/Software/eclipse")))
 
 ;; Variables
 (setq eclim-auto-save t
@@ -602,5 +603,6 @@ nil are ignored."
            :recursive t
            :publishing-function org-publish-attachment)
           ("org" :components ("org-notes" "org-static"))))
+
 
 (provide 'init-leo)

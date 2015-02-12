@@ -39,6 +39,8 @@
 (set-default 'ac-sources
              '(ac-source-imenu
                ac-source-dictionary
+               ac-source-filename
+               ac-source-eclim
                ac-source-words-in-buffer
                ac-source-words-in-same-mode-buffers
                ac-source-words-in-all-buffer))
