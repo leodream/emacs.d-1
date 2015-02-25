@@ -577,7 +577,8 @@ nil are ignored."
 (global-set-key ";" 'eim-insert-ascii)
 
 
-(set-fontset-font "fontset-default" 'unicode"WenQuanYi Bitmap Song 12") ;;for linux
+(set-fontset-font "fontset-default" 'unicode"WenQuanYi Zen Hei") ;;for linux
+(setq face-font-rescale-alist '(("Microsoft Yahei" . 1.2) ("WenQuanYi Zen Hei" . 1.2)))
 
 
 
