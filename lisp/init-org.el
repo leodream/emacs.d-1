@@ -159,6 +159,31 @@ typical word processor."
       (quote ((sequence "TODO(t)" "TOBREAKDOWN(o)" "READY(r)" "|" "DONE(d!/!)")
               (sequence "WAITING(w@/!)" "BEGINED(b!)" "PROJECT(p)" "SOMEDAY(s)" "|" "CANCELLED(c@/!)"))))
 
+(setq org-todo-keyword-faces
+      '(("PROJECT" . "cyan")
+        ("TODO" . "red")
+        ("TOBREAKDOWN" . "yellow")
+        ("SOMEDAY" . "chocolate")
+        ("WAITING" . "goldenrod")
+        ("READY" . "khaki")
+        ("BEGINED" . "yellow green")
+        ))
+
+(setq org-priority-faces
+      (quote ((65 . "tomato") (66 . "dark salmon") (67 . "rosy brown"))))
+
+;; Strike through headlines for DONE tasks in Org
+;; http://sachachua.com/blog/2012/12/emacs-strike-through-headlines-for-done-tasks-in-org/
+(setq org-fontify-done-headline t)
+(custom-set-faces
+ '(org-done ((t (:foreground "PaleGreen"
+                 :weight normal
+                 :strike-through t))))
+ '(org-headline-done
+            ((((class color) (min-colors 16) (background dark))
+               (:foreground "LightSalmon" :strike-through t)))))
+
+
 
 ;; Change TODO to DONE automatically after all subtask are done.
 (defun org-summary-todo (n-done n-not-done)
@@ -293,18 +318,6 @@ typical word processor."
                    ))
           (tags-todo "/-TOBREAKDOWN-SOMEDAY")))
         ))
-
-
-;; Strike through headlines for DONE tasks in Org
-;; http://sachachua.com/blog/2012/12/emacs-strike-through-headlines-for-done-tasks-in-org/
-(setq org-fontify-done-headline t)
-(custom-set-faces
- '(org-done ((t (:foreground "PaleGreen"
-                             :weight normal
-                             :strike-through t))))
- '(org-headline-done
-   ((((class color) (min-colors 16) (background dark))
-     (:foreground "LightSalmon" :strike-through t)))))
 
 
 
