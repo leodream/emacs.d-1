@@ -16,6 +16,7 @@
 (require-package 'god-mode)
 (require-package 'helm)
 (require-package 'projectile)
+(require-package 'helm-projectile)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
