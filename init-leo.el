@@ -197,7 +197,6 @@
     (goto-char point)
     (set-window-start nil window-start) )) ; nil - the selected window
 
-(global-linum-mode 1)
 
 
 
