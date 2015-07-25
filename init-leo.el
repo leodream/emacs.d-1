@@ -652,12 +652,39 @@ PS: this function is inspired by Wang Yin."
          (other-window 1)))
   (scheme-send-last-sexp))
 
-(setq scheme-program-name "guile")
+(setq scheme-program-name "mit-scheme")
+
+(defun lhe/scheme-send-last-sexp ()
+  "Run 'scheme-send-last-sexp' and move scheme buffer's
+  point to the end"
+  (interactive)
+  (let ((scheme-window (get-buffer-window scheme-buffer)))
+    (if scheme-window
+        (set-window-point scheme-window
+                          (+ 1 (buffer-size (window-buffer scheme-window))))))
+  (scheme-send-last-sexp))
+(defun lhe/new-parenth (&optional n)
+  "(a|) => (a) (|)"
+  (interactive "P")
+  (if n
+      (dotimes (i (- n 1))
+        (paredit-close-round)))
+  (paredit-close-round-and-newline)
+  (paredit-open-round))
+
+(defun lhe/move-to-new-parenth ()
+  "(a |b) => (a) (b|)"
+  (interactive))
 
 (add-hook 'scheme-mode-hook
           #'(lambda ()
               (local-set-key (kbd "C-x C-M-e") 'kh/scheme-send-last-sexp)
+              (local-set-key (kbd "C-x C-e") 'lhe/scheme-send-last-sexp)
+              (local-set-key (kbd "C-c e") 'scheme-send-definition)
+              (local-set-key (kbd "C-x e") 'lhe/scheme-send-last-sexp)
+              (local-set-key (kbd "C-M-(") 'lhe/new-parenth)
               (rainbow-delimiters-mode t)
+              (paredit-mode t)
               (autopair-mode t)))
 
 (require 'autopair)
