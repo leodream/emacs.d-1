@@ -491,6 +491,7 @@ nil are ignored."
       helm-imenu-fuzzy-match    t)
 (setq helm-locate-fuzzy-match t)
 (setq helm-apropos-fuzzy-match t)
+(setq session-save-print-spec '(t nil 40000))  ;; need this to make helm-all-mark-ring works with session.el
 
 
 (when (executable-find "ack-grep")
@@ -509,12 +510,13 @@ nil are ignored."
       helm-ff-file-name-history-use-recentf t)
 
 (projectile-global-mode)
-(setq projectile-completion-system 'helm)
 (helm-projectile-on)
-
+(setq projectile-completion-system 'helm)
 (setq projectile-switch-project-action 'helm-projectile)
 (setq projectile-enable-caching t)
 
+
+(helm-autoresize-mode 1)
 (helm-mode 1)
 
 
