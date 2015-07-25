@@ -1,5 +1,4 @@
 (require-package 'company)
-(require-package 'ecb)
 (require-package 'emacs-eclim)
 (require-package 'fold-dwim)
 (require-package 'fold-dwim-org)
@@ -8,7 +7,6 @@
 (require-package 'goto-last-change)
 (require-package 'groovy-mode)
 (require-package 'hide-lines)
-(require-package 'powershell-mode)
 (require-package 'vlf)
 (require-package 'w3m)
 (require-package 'yasnippet)
@@ -25,20 +23,6 @@
 ;;(load-file (expand-file-name "~/.emacs.d/goto-last-change.el"))
 (require 'goto-last-change)
 (global-set-key (kbd "C-x C-_") 'goto-last-change)
-
-
-
-;;----------------------------------------------------------------------------
-;; ECB Setting
-;;----------------------------------------------------------------------------
-(require 'ecb-autoloads)
-(custom-set-variables
- '(ecb-windows-width 0.25))
-
-;; Make Winner mode runable after ecb-deactivate
-(add-hook 'ecb-deactivate-hook
-          '(lambda ()
-             (ecb-disable-advices 'ecb-winman-not-supported-function-advices t)))
 
 
 
@@ -160,7 +144,6 @@
 (add-hook 'lisp-mode-hook       'hs-minor-mode)
 (add-hook 'perl-mode-hook       'hs-minor-mode)
 (add-hook 'sh-mode-hook         'hs-minor-mode)
-(add-hook 'powershell-mode-hook 'hs-minor-mode)
 
 (add-hook 'c-mode-common-hook   'fold-dwim-org/minor-mode)
 (add-hook 'emacs-lisp-mode-hook 'fold-dwim-org/minor-mode)
@@ -168,7 +151,6 @@
 (add-hook 'lisp-mode-hook       'fold-dwim-org/minor-mode)
 (add-hook 'perl-mode-hook       'fold-dwim-org/minor-mode)
 (add-hook 'sh-mode-hook         'fold-dwim-org/minor-mode)
-(add-hook 'powershell-mode      'fold-dwim-org/minor-mode)
 
 
 (setq outline-regexp "\\(?:\\([ \t]*.*\\(class\\|interface\\)[ \t]+[a-zA-Z0-9_]+[ \t\n]*\\({\\|extends\\|implements\\)\\)\\|[ \t]*\\(public\\|private\\|static\\|final\\|native\\|synchronized\\|transient\\|volatile\\|strictfp\\| \\|\t\\)*[ \t]+\\(\\([a-zA-Z0-9_]\\|\\( *\t*< *\t*\\)\\|\\( *\t*> *\t*\\)\\|\\( *\t*, *\t*\\)\\|\\( *\t*\\[ *\t*\\)\\|\\(]\\)\\)+\\)[ \t]+[a-zA-Z0-9_]+[ \t]*(\\(.*\\))[ \t]*\\(throws[ \t]+\\([a-zA-Z0-9_, \t\n]*\\)\\)?[ \t\n]*{\\)" )
