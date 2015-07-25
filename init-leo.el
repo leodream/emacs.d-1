@@ -392,17 +392,6 @@ nil are ignored."
 ;;---------------------------------------------------------------------------
 ;; vlf-setting
 ;;---------------------------------------------------------------------------
-;; (add-to-list 'load-path "/usr/bin/")
-
-;; (defun my-find-file-check-make-large-file-read-only-hook ()
-;;   "If a file is over a given size, make the buffer read only."
-;;   (when (> (buffer-size) (* 1024 1024))
-;;     (setq buffer-read-only t)
-;;     (buffer-disable-undo)
-;;     (fundamental-mode)))
-
-;; (add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
-(setq vlf-tune-max 1000000)
 (require 'vlf-setup)
 
 
