@@ -10,9 +10,9 @@
 (define-key global-map (kbd "C-c a") 'org-agenda)
 (define-key global-map (kbd "C-c c") 'org-capture)
 
-(setq org-agenda-files (quote ("~/Dropbox/notes/TODOList.org" "~/Dropbox/notes/work.org" "~/Dropbox/notes/entertainment.org" "~/Dropbox/notes/practice.org" "~/Dropbox/notes/learning.org" "~/Dropbox/notes/life.org")))
+(setq org-agenda-files (quote ("~/Dropbox/todo/TODOList.org" "~/Dropbox/todo/work.org" "~/Dropbox/todo/entertainment.org" "~/Dropbox/todo/practice.org" "~/Dropbox/todo/learning.org" "~/Dropbox/todo/life.org")))
 
-(setq org-directory "/home/leo/Dropbox/notes")
+(setq org-directory "/home/leo/Dropbox/todo")
 (setq org-default-notes-file (concat org-directory "/capture.org"))
 
 (require 'org-habit)
@@ -32,7 +32,7 @@
       org-tags-column 80
       org-agenda-tags-column -100
       org-habit-following-days 3
-      org-habit-preceding-days 14
+      org-habit-preceding-days 25
       org-habit-graph-column 100
       org-habit-show-habits-only-for-today nil)
 
@@ -103,34 +103,34 @@ typical word processor."
 
 (setq org-capture-templates
       '(("t" "Normal TODO item with a link"
-         entry (file "~/Dropbox/notes/TODOList.org")
+         entry (file "~/Dropbox/todo/TODOList.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
         ("l" "Normal Life item with a link"
-         entry (file "~/Dropbox/notes/life.org")
+         entry (file "~/Dropbox/todo/life.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
         ("w" "Normal work item with a link"
-         entry (file "~/Dropbox/notes/work.org")
+         entry (file "~/Dropbox/todo/work.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
         ("e" "Normal entertainment item with a link"
-         entry (file "~/Dropbox/notes/entertainment.org")
+         entry (file "~/Dropbox/todo/entertainment.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
         ("p" "Normal Practice item with a link"
-         entry (file "~/Dropbox/notes/practice.org")
+         entry (file "~/Dropbox/todo/practice.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
         ("L" "Normal Learning item with a link"
-         entry (file "~/Dropbox/notes/learning.org")
+         entry (file "~/Dropbox/todo/learning.org")
          "* %^{prompt|READY|TODO|BEGINED|TOBREAKDOWN|SOMEDAY} %? %^g\n%i\n %a")
 
         ("d" "Log the task that already done"
-         entry (file "~/Dropbox/notes/TODOList.org")
+         entry (file "~/Dropbox/todo/TODOList.org")
          "* %^{prompt|DONE|BEGINED} %? %^g\n:LOGBOOK:\nCLOCK: %^U--%^U\n:END:\n%i\n %a" :clock-keep t)
 
         ("b" "Log the task that already begined"
-         entry (file "~/Dropbox/notes/TODOList.org")
+         entry (file "~/Dropbox/todo/TODOList.org")
          "* BEGINED %? %^g\n:LOGBOOK:\nCLOCK: %^U\n:END:\n%i\n %a" :clock-in t :clock-resume t)
 
         ("c" "add checkItem"
-         checkitem (file "~/Dropbox/notes/TODOList.org")
+         checkitem (file "~/Dropbox/todo/TODOList.org")
          "- [ ] %? %a %i")
         ))
 
@@ -182,6 +182,8 @@ typical word processor."
 
 (setq org-priority-faces
       (quote ((65 . "tomato") (66 . "dark salmon") (67 . "rosy brown"))))
+
+;;(setq org-default-priority )
 
 ;; Strike through headlines for DONE tasks in Org
 ;; http://sachachua.com/blog/2012/12/emacs-strike-through-headlines-for-done-tasks-in-org/
