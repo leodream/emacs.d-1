@@ -6,6 +6,7 @@
 (require-package 'ggtags)
 (require-package 'goto-last-change)
 (require-package 'groovy-mode)
+(require-package 'god-mode)
 (require-package 'hide-lines)
 (require-package 'vlf)
 (require-package 'w3m)
@@ -406,13 +407,46 @@ nil are ignored."
 (require 'god-mode-isearch)
 (define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
 (define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
-(define-key god-local-mode-map (kbd "z") 'repeat)
+(define-key god-local-mode-map (kbd ".") 'repeat)
 (define-key god-local-mode-map (kbd "i") 'god-local-mode)
 (defun god-toggle-on-overwrite ()
   "Toggle god-mode on overwrite-mode."
   (if (bound-and-true-p overwrite-mode)
       (god-local-mode-pause)
     (god-local-mode-resume)))
+
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode
+                                        ;                            buffer-read-only
+                            )
+                        'box
+                      'bar)))
+
+(add-hook 'god-mode-enabled-hook 'c/god-mode-update-cursor)
+(add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor)
+(add-hook 'god-mode-enabled-hook 'my-update-cursor)
+(add-hook 'god-mode-disabled-hook 'my-update-cursor)
+
+(defun c/god-mode-update-cursor ()
+  (interactive)
+  (let ((limited-colors-p (> 257 (length (defined-colors)))))
+    (cond (god-local-mode (progn
+                            (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
+                            (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832"))))
+          (t (progn
+               (set-face-background 'mode-line (if limited-colors-p "red" "#8b0000"))
+               (set-face-background 'mode-line-inactive (if limited-colors-p "red" "#8b0000"))
+               )))))
+
+(defun my-god-mode-self-insert ()
+  (interactive)
+  (if (and (bolp)
+           (eq major-mode 'org-mode))
+      (call-interactively 'org-self-insert-command)
+    (call-interactively 'god-mode-self-insert)))
+
+(define-key god-local-mode-map [remap self-insert-command] 'my-god-mode-self-insert)
+
 
 
 
