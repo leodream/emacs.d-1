@@ -265,16 +265,16 @@ typical word processor."
 
 ;;; Agenda views
 
-(setq org-agenda-compact-blocks t
+(setq org-agenda-compact-blocks nil
       org-agenda-sticky t
       org-agenda-start-on-weekday nil
       org-agenda-span 'day
       org-agenda-include-diary nil
       org-agenda-sorting-strategy
       '((agenda habit-down time-up user-defined-up effort-up category-keep)
-        (todo category-up effort-up)
-        (tags category-up effort-up)
-        (search category-up))
+        (todo priority-down category-up effort-up)
+        (tags priority-down category-up effort-up)
+        (search priority-down category-up))
       org-agenda-window-setup 'current-window
       org-agenda-custom-commands
       '(
