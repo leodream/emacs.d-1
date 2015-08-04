@@ -1,22 +1,22 @@
+(require-package 'autopair)
+(require-package 'better-registers)
 (require-package 'company)
 (require-package 'emacs-eclim)
+(require-package 'evil)
 (require-package 'fold-dwim)
 (require-package 'fold-dwim-org)
 (require-package 'fold-this)
 (require-package 'ggtags)
+(require-package 'god-mode)
 (require-package 'goto-last-change)
 (require-package 'groovy-mode)
-(require-package 'god-mode)
+(require-package 'helm)
+(require-package 'helm-projectile)
 (require-package 'hide-lines)
+(require-package 'projectile)
 (require-package 'vlf)
 (require-package 'w3m)
 (require-package 'yasnippet)
-(require-package 'better-registers)
-(require-package 'god-mode)
-(require-package 'helm)
-(require-package 'projectile)
-(require-package 'helm-projectile)
-(require-package 'autopair)
 
 ;;----------------------------------------------------------------------------
 ;; Goto-the-last-change
@@ -374,7 +374,6 @@ nil are ignored."
 
 
 
-
 ;;----------------------------------------------------------------------------
 ;; Press % to jump to the matching (){}
 ;;----------------------------------------------------------------------------
@@ -397,56 +396,42 @@ nil are ignored."
 
 
 
-;;---------------------------------------------------------------------------
-;; god-mode
-;;---------------------------------------------------------------------------
-(require 'god-mode)
-(global-set-key (kbd "<escape>") 'god-mode-all)
-(setq god-exempt-major-modes nil)
-(setq god-exempt-predicates nil)
-(require 'god-mode-isearch)
-(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
-(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
-(define-key god-local-mode-map (kbd ".") 'repeat)
-(define-key god-local-mode-map (kbd "i") 'god-local-mode)
-(defun god-toggle-on-overwrite ()
-  "Toggle god-mode on overwrite-mode."
-  (if (bound-and-true-p overwrite-mode)
-      (god-local-mode-pause)
-    (god-local-mode-resume)))
+;;------------------------
+;; evil setting
+;;------------------------
+(require 'evil)
+(evil-mode 1)
+(setq evil-toggle-key "")   ; remove default evil-toggle-key C-z, manually setup later
+(setq evil-want-C-i-jump nil)   ; don't bind [tab] to evil-jump-forward
+(evil-mode 1)
 
-(defun my-update-cursor ()
-  (setq cursor-type (if (or god-local-mode
-                                        ;                            buffer-read-only
-                            )
-                        'box
-                      'bar)))
+;; remove all keybindings from insert-state keymap, use emacs-state when editing
+(setcdr evil-insert-state-map nil)
 
-(add-hook 'god-mode-enabled-hook 'c/god-mode-update-cursor)
-(add-hook 'god-mode-disabled-hook 'c/god-mode-update-cursor)
-(add-hook 'god-mode-enabled-hook 'my-update-cursor)
-(add-hook 'god-mode-disabled-hook 'my-update-cursor)
+;; ESC to switch back normal-state
+(define-key evil-insert-state-map [escape] 'evil-normal-state)
 
-(defun c/god-mode-update-cursor ()
-  (interactive)
-  (let ((limited-colors-p (> 257 (length (defined-colors)))))
-    (cond (god-local-mode (progn
-                            (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
-                            (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832"))))
-          (t (progn
-               (set-face-background 'mode-line (if limited-colors-p "red" "#8b0000"))
-               (set-face-background 'mode-line-inactive (if limited-colors-p "red" "#8b0000"))
-               )))))
+;; TAB to indent in normal-state
+(define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
 
-(defun my-god-mode-self-insert ()
-  (interactive)
-  (if (and (bolp)
-           (eq major-mode 'org-mode))
-      (call-interactively 'org-self-insert-command)
-    (call-interactively 'god-mode-self-insert)))
+;; Use j/k to move one visual line insted of gj/gk
+(define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+(define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+(define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+(define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
-(define-key god-local-mode-map [remap self-insert-command] 'my-god-mode-self-insert)
-
+;; change mode-line color by evil state
+(lexical-let ((default-color (cons (face-background 'mode-line)
+                                   (face-foreground 'mode-line))))
+  (add-hook 'post-command-hook
+            (lambda ()
+              (let ((color (cond ((minibufferp) default-color)
+                                 ((evil-insert-state-p) '("#e80000" . "#ffffff"))
+                                 ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
+                                 ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
+                                 (t default-color))))
+                (set-face-background 'mode-line (car color))
+                (set-face-foreground 'mode-line (cdr color))))))
 
 
 
@@ -515,9 +500,9 @@ nil are ignored."
 (setq projectile-switch-project-action 'helm-projectile)
 (setq projectile-enable-caching t)
 
-
 (helm-autoresize-mode 1)
 (helm-mode 1)
+
 
 
 ;;---------------------------------------------------------------------------
@@ -526,6 +511,7 @@ nil are ignored."
 (require-package 'tabbar)
 (global-auto-revert-mode t)
 (menu-bar-mode -1)
+(global-hl-line-mode 1)
 
 (setq hippie-expand-try-functions-list
       '(try-expand-dabbrev
@@ -543,7 +529,7 @@ nil are ignored."
 
 
 ;;---------------------------------------------------------------------------
-;; copy file name
+;; utils functions
 ;;---------------------------------------------------------------------------
 (defun prelude-copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -554,8 +540,6 @@ nil are ignored."
     (when filename
       (kill-new filename)
       (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-
 
 (defun hide-ctrl-M ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
@@ -584,10 +568,8 @@ nil are ignored."
 (require 'eim-extra)
 (global-set-key ";" 'eim-insert-ascii)
 
-
 (set-fontset-font "fontset-default" 'unicode"WenQuanYi Zen Hei") ;;for linux
 (setq face-font-rescale-alist '(("Microsoft Yahei" . 1.2) ("WenQuanYi Zen Hei" . 1.2)))
-
 
 
 
@@ -688,5 +670,7 @@ PS: this function is inspired by Wang Yin."
               (autopair-mode t)))
 
 (require 'autopair)
+
+
 
 (provide 'init-leo)
