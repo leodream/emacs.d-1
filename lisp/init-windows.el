@@ -11,6 +11,9 @@
 (setq switch-window-shortcut-style 'alphabet)
 (global-set-key (kbd "C-x o") 'switch-window)
 
+(defun back-to-previous-buffer ()
+  (interactive)
+  (switch-to-buffer nil))
 
 ;;----------------------------------------------------------------------------
 ;; When splitting window, show (other-buffer) in the new window

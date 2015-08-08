@@ -1,8 +1,10 @@
+;; -*- lexical-binding: t -*-
 (require-package 'autopair)
 (require-package 'better-registers)
 (require-package 'company)
 (require-package 'emacs-eclim)
 (require-package 'evil)
+(require-package 'evil-leader)
 (require-package 'fold-dwim)
 (require-package 'fold-dwim-org)
 (require-package 'fold-this)
@@ -275,50 +277,50 @@ be prompted."
 
   (let (new-frame modified-buffers active-clients-or-frames)
 
-    ; Check if there are modified buffers or active clients or frames.
+                                        ; Check if there are modified buffers or active clients or frames.
     (setq modified-buffers (modified-buffers-exist))
     (setq active-clients-or-frames ( or (> (length server-clients) 1)
                                         (> (length (frame-list)) 1)
-                                       ))
+                                        ))
 
-    ; Create a new frame if prompts are needed.
+                                        ; Create a new frame if prompts are needed.
     (when (or modified-buffers active-clients-or-frames)
       (when (not (eq window-system 'x))
         (message "Initializing x windows system.")
-;        (x-initialize-window-system)
+                                        ;        (x-initialize-window-system)
         )
       (when (not display) (setq display (getenv "DISPLAY")))
       (message "Opening frame on display: %s" display)
       (select-frame (make-frame-on-display display '((window-system . x)))))
 
-    ; Save the current frame.
+                                        ; Save the current frame.
     (setq new-frame (selected-frame))
 
 
-    ; When displaying the number of clients and frames:
-    ; subtract 1 from the clients for this client.
-    ; subtract 2 from the frames this frame (that we just created) and the default frame.
+                                        ; When displaying the number of clients and frames:
+                                        ; subtract 1 from the clients for this client.
+                                        ; subtract 2 from the frames this frame (that we just created) and the default frame.
     (when ( or (not active-clients-or-frames)
                (yes-or-no-p (format "There are currently %d clients and %d frames. Exit anyway?" (- (length server-clients) 1) (- (length (frame-list)) 2))))
 
-      ; If the user quits during the save dialog then don't exit emacs.
-      ; Still close the terminal though.
+                                        ; If the user quits during the save dialog then don't exit emacs.
+                                        ; Still close the terminal though.
       (let((inhibit-quit t))
-             ; Save buffers
+                                        ; Save buffers
         (with-local-quit
           (save-some-buffers))
 
         (if quit-flag
-          (setq quit-flag nil)
-          ; Kill all remaining clients
+            (setq quit-flag nil)
+                                        ; Kill all remaining clients
           (progn
             (dolist (client server-clients)
               (server-delete-client client))
-                 ; Exit emacs
+                                        ; Exit emacs
             (kill-emacs)))
         ))
 
-    ; If we made a frame then kill it.
+                                        ; If we made a frame then kill it.
     (when (or modified-buffers active-clients-or-frames) (delete-frame new-frame))
     )
   )
@@ -400,10 +402,11 @@ nil are ignored."
 ;; evil setting
 ;;------------------------
 (require 'evil)
-(evil-mode 1)
+(require 'evil-leader)
 (setq evil-toggle-key "")   ; remove default evil-toggle-key C-z, manually setup later
 (setq evil-want-C-i-jump nil)   ; don't bind [tab] to evil-jump-forward
 (evil-mode 1)
+(global-evil-leader-mode 1)
 
 ;; remove all keybindings from insert-state keymap, use emacs-state when editing
 (setcdr evil-insert-state-map nil)
@@ -432,6 +435,207 @@ nil are ignored."
                                  (t default-color))))
                 (set-face-background 'mode-line (car color))
                 (set-face-foreground 'mode-line (cdr color))))))
+
+(evil-leader/set-leader "SPC")
+(evil-leader/set-key
+  "dd" 'sdcv-search-pointer
+  "dD" 'sdcv-search-pointer
+  "di" 'sdcv-search-input+
+  "dI" 'sdcv-search-input
+
+  "mmm" 'mpc-which-song
+  "mmn" 'mpc-next-prev-song
+  "mmp" '(lambda () (interactive) (mpc-next-prev-song t))
+
+  "ls" 'highlight-symbol
+  "lq" 'highlight-symbol-query-replace
+  "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
+
+  "rnr" 'rinari-web-server-restart
+  "rnc" 'rinari-find-controller
+  "rnv" 'rinari-find-view
+  "rna" 'rinari-find-application
+  "rnk" 'rinari-rake
+  "rnm" 'rinari-find-model
+  "rnl" 'rinari-find-log
+  "rno" 'rinari-console
+  "rnt" 'rinari-find-test
+
+  "hst" 'hs-toggle-fold
+  "hsa" 'hs-toggle-fold-all
+  "hsh" 'hs-hide-block
+  "hss" 'hs-show-block
+
+  "xnn" 'narrow-or-widen-dwim
+  "xnw" 'widen
+  "xnd" 'narrow-to-defun
+  "xnr" 'narrow-to-region
+
+  "fb" 'flyspell-buffer
+  "fe" 'flyspell-goto-next-error
+  "fa" 'flyspell-auto-correct-word
+  "pe" 'flymake-goto-prev-error
+  "ne" 'flymake-goto-next-error
+  "fw" 'ispell-word
+
+  "wrn" 'httpd-restart-now
+  "wrd" 'httpd-restart-at-default-directory
+
+  "hd" 'describe-function
+  "hf" 'find-function
+  "hk" 'describe-key
+  "hv" 'describe-variable
+
+  "xm" 'smex
+  "xb" 'ido-switch-buffer
+  "xk" 'ido-kill-buffer
+  "xo" 'helm-find-files
+  "ri" 'yari-helm
+  "mx" 'helm-M-x
+  "hM" 'helm-bookmarks
+  "hh" 'browse-kill-ring
+  "hr" 'helm-recentf
+  "ha" 'helm-apropos
+  "hi" 'helm-semantic-or-imenu
+  "hI" 'helm-imenu-in-all-buffers
+  "hl" 'helm-locate
+  "ho" 'helm-occur
+  "hp" 'helm-list-emacs-process
+
+  "hS" 'helm-surfraw
+  "ht" 'helm-top
+  "hx" 'helm-register
+  "h<tab>" 'helm-lisp-completion-at-point
+  "hm" 'helm-man-woman
+  "h," 'calc
+  "he" 'helm-etags-select
+  "h/" 'helm-find
+  "hb" 'helm-resume
+  "ff" 'helm-for-files ;; "C-c f"
+  "xf" 'helm-find-files
+  "y" 'helm-show-kill-ring
+  "bb" 'helm-mini
+  "SPC" 'helm-all-mark-rings
+
+  "p!" 'projectile-run-shell-command-in-root
+  "p&" 'projectile-run-async-shell-command-in-root
+  "pD" 'projectile-dired
+  "pF" 'helm-projectile-find-file-in-known-projects
+  "pI" 'projectile-ibuffer
+  "pP" 'projectile-test-project
+  "pR" 'projectile-regenerate-tags
+  "pS" 'projectile-save-project-buffers
+  "pT" 'projectile-find-test-file
+  "pa" 'helm-projectile-find-other-file
+  "pb" 'helm-projectile-switch-to-buffer
+  "pc" 'projectile-compile-project
+  "pd" 'helm-projectile-find-dir
+  "pe" 'helm-projectile-recentf
+  "pf" 'helm-projectile-find-file
+  "pg" 'helm-projectile-find-file-dwim
+  "ph" 'helm-projectile
+  "pi" 'projectile-invalidate-cache
+  "pj" 'projectile-find-tag
+  "pk" 'projectile-kill-buffers
+  "pl" 'projectile-find-file-in-directory
+  "pm" 'projectile-commander
+  "po" 'projectile-multi-occur
+  "pp" 'helm-projectile-switch-project
+  "pr" 'projectile-replace
+  "pt" 'projectile-toggle-between-implementation-and-test
+  "pu" 'projectile-run-project
+  "pv" 'projectile-vc
+  "pz" 'projectile-cache-file
+
+  "ma" 'mc/mark-all-like-this-in-defun
+  "mw" 'mc/mark-all-words-like-this-in-defun
+  "ms" 'mc/mark-all-symbols-like-this-in-defun
+  ;; "opt" is occupied by my-open-project-todo
+  ;; recommended in html
+  "md" 'mc/mark-all-like-this-dwim
+
+  "/" 'goto-last-change
+  ";" 'ace-jump-mode
+  ":" 'ace-jump-line-mode
+  "[" 'beginning-of-defun
+  "bf" 'beginning-of-defun
+  "bu" 'backward-up-list
+  "ef" 'end-of-defun
+  "]" 'end-of-defun
+  "mf" 'mark-defun
+  "bs" '(lambda () (interactive) (goto-edge-by-comparing-font-face -1))
+  "es" 'goto-edge-by-comparing-font-face
+
+  "." 'evil-ex
+  "<escape>" 'keyboard-quit
+  "jp" 'jsons-print-path
+  "oc" 'occur
+  "ut" 'undo-tree-visualize
+  "ar" 'align-regexp
+  "sd" 'su-edit
+  "sc" 'shell-command
+  "sl" 'sort-lines
+  "dj" 'dired-jump ;; open the dired from current file
+  "eb" 'eval-buffer
+  "ee" 'eval-expression
+  "xe" 'eval-last-sexp
+
+  "kb" 'kill-buffer-and-window ;; "k" is preserved to replace "C-g"
+  "xc" 'save-buffers-kill-terminal
+  "xh" 'mark-whole-buffer
+  "ww" 'save-buffer
+  "ss" 'save-buffer
+  "xs" 'save-some-buffers
+  "xx" 'cua-exchange-point-and-mark
+
+  "oo" 'switch-window
+  "pb" 'back-to-previous-buffer
+  "wj" 'windmove-down
+  "wk" 'windmove-up
+  "wh" 'windmove-left
+  "wl" 'windmove-right
+  "xr" 'rotate-windows
+  "cu" 'winner-undo
+  "cr" 'winner-redo
+  "bk" 'buf-move-up
+  "bj" 'buf-move-down
+  "bh" 'buf-move-left
+  "bl" 'buf-move-right
+  "vv" 'scroll-other-window
+  "vu" 'scroll-other-window-up
+  "tff" 'toggle-frame-fullscreen
+  "tfm" 'toggle-frame-maximized
+  "xz" 'suspend-frame
+
+  "0" 'delete-window
+  "1" 'sanityinc/toggle-delete-other-windows
+  "2" (split-window-func-with-other-buffer 'split-window-vertically)
+  "3" (split-window-func-with-other-buffer 'split-window-horizontally)
+
+  "bm" 'pomodoro-start ;; beat myself
+  "cc" 'org-capture
+  "ca" 'org-agenda
+  "cn" 'outline-next-visible-heading
+  "cp" 'outline-previous-visible-heading
+  "cf" 'org-forward-heading-same-level
+  "cb" 'org-backward-heading-same-level
+  "csi" 'org-insert-src-block
+  "cse" 'org-edit-src-code
+  "c$" 'org-archive-subtree ; `C-c $'
+  "c<" 'org-promote-subtree ; `C-c C-<'
+  "c>" 'org-demote-subtree ; `C-c C->'
+  "cxi" 'org-clock-in ; `C-c C-x C-i'
+  "cxo" 'org-clock-out ; `C-c C-x C-o'
+  "cxr" 'org-clock-report ; `C-c C-x C-r'
+  "otl" 'org-toggle-link-display
+
+  "gg" 'magit-status
+  "gt" 'ggtags-find-tag-dwim
+  "gr" 'ggtags-find-reference
+  ;; @see https://github.com/pidu/git-timemachine
+  ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
+  "gm" 'git-timemachine-toggle
+  )
 
 
 
@@ -546,6 +750,48 @@ nil are ignored."
   (interactive)
   (setq buffer-display-table (make-display-table))
   (aset buffer-display-table ?\^M []))
+
+;; {{ message buffer things
+(defun erase-message-buffer (&optional num)
+  "Erase the content of the *Messages* buffer in emacs.
+    Keep the last num lines if argument num if given."
+  (interactive "p")
+  (let ((buf (cond
+              ((eq 'ruby-mode major-mode) "*server*")
+              (t "*Messages*"))))
+    (erase-specific-buffer num buf)))
+
+;; {{ @see http://emacs.stackexchange.com/questions/14129/which-keyboard-shortcut-to-use-for-navigating-out-of-a-string
+(defun font-face-is-similar (f1 f2)
+  (let (rlt)
+    ;; (message "f1=%s f2=%s" f1 f2)
+    (if (eq f1 f2) (setq rlt t)
+      ;; C++ comment has different font face for limit and content
+      ;; f1 or f2 could be a function object because of rainbow mode
+      (if (and (string-match "-comment-" (format "%s" f1)) (string-match "-comment-" (format "%s" f2)))
+          (setq rlt t)))
+    rlt))
+
+(defun goto-edge-by-comparing-font-face (&optional step)
+  "Goto either the begin or end of string/comment/whatever.
+If step is -1, go backward."
+  (interactive "P")
+  (let ((cf (get-text-property (point) 'face))
+        (p (point))
+        rlt
+        found
+        end)
+    (unless step (setq step 1)) ;default value
+    (setq end (if (> step 0) (point-max) (point-min)))
+    (while (and (not found) (not (= end p)))
+      (if (not (font-face-is-similar (get-text-property p 'face) cf))
+          (setq found t)
+        (setq p (+ p step))))
+    (if found (setq rlt (- p step))
+      (setq rlt p))
+    ;; (message "rlt=%s found=%s" rlt found)
+    (goto-char rlt)))
+;; }}
 
 
 
@@ -670,7 +916,5 @@ PS: this function is inspired by Wang Yin."
               (autopair-mode t)))
 
 (require 'autopair)
-
-
 
 (provide 'init-leo)
