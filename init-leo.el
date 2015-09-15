@@ -498,7 +498,6 @@ nil are ignored."
   "xm" 'smex
   "xb" 'ido-switch-buffer
   "xk" 'ido-kill-buffer
-  "xo" 'helm-find-files
   "ri" 'yari-helm
   "mx" 'helm-M-x
   "hM" 'helm-bookmarks
@@ -628,13 +627,13 @@ nil are ignored."
   "cp" 'outline-previous-visible-heading
   "cf" 'org-forward-heading-same-level
   "cb" 'org-backward-heading-same-level
-  "csi" 'org-insert-src-block
-  "cse" 'org-edit-src-code
+  "si" 'org-insert-src-block
+  "se" 'org-edit-src-code
   "c$" 'org-archive-subtree ; `C-c $'
   "c<" 'org-promote-subtree ; `C-c C-<'
   "c>" 'org-demote-subtree ; `C-c C->'
-  "cxi" 'org-clock-in ; `C-c C-x C-i'
-  "cxo" 'org-clock-out ; `C-c C-x C-o'
+  "xi" 'org-clock-in ; `C-c C-x C-i'
+  "xo" 'org-clock-out ; `C-c C-x C-o'
   "cxr" 'org-clock-report ; `C-c C-x C-r'
   "otl" 'org-toggle-link-display
 
