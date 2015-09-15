@@ -417,6 +417,9 @@ nil are ignored."
 ;; TAB to indent in normal-state
 (define-key evil-normal-state-map (kbd "TAB") 'indent-for-tab-command)
 
+;; C-i to jump forward in normal-state
+(define-key evil-normal-state-map (kbd "C-i") 'evil-jump-forward)
+
 ;; Use j/k to move one visual line insted of gj/gk
 (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
 (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
@@ -460,6 +463,12 @@ nil are ignored."
   "rnl" 'rinari-find-log
   "rno" 'rinari-console
   "rnt" 'rinari-find-test
+
+  "rw" 'window-configuration-to-register
+  "rj" 'jump-to-register
+  "rm" 'bookmark-set
+  "rl" 'bookmark-bmenu-list
+  "rb" 'bookmark-jump
 
   "hst" 'hs-toggle-fold
   "hsa" 'hs-toggle-fold-all
