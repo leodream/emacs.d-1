@@ -1,5 +1,6 @@
 (require-package 'evil)
 (require-package 'evil-leader)
+(require-package 'evil-nerd-commenter)
 
 
 ;;------------------------
@@ -167,6 +168,15 @@
   ;; recommended in html
   "md" 'mc/mark-all-like-this-dwim
 
+  "ci" 'evilnc-comment-or-uncomment-lines
+  "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "ll" 'evilnc-quick-comment-or-uncomment-to-the-line
+  "cy" 'evilnc-copy-and-comment-lines
+  "ch" 'evilnc-comment-or-uncomment-paragraphs
+  "cg" 'comment-or-uncomment-region
+  "cv" 'evilnc-toggle-invert-comment-line-by-line
+  "\\" 'evilnc-comment-operator ; if you prefer backslash key
+
   "/" 'goto-last-change
   ";" 'ace-jump-mode
   ":" 'ace-jump-line-mode
@@ -249,6 +259,8 @@
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
   "gm" 'git-timemachine-toggle
   )
+
+
 
 
 ;;;
