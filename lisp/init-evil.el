@@ -250,4 +250,55 @@
   "gm" 'git-timemachine-toggle
   )
 
+
+;;;
+(defun swap-np (mode)
+  "swap n/p with j/k for a given mode string"
+  (interactive)
+  (let ((map (symbol-value (intern (format "%s-map" mode)))))
+    (let ((jkey (lookup-key map (kbd "j")))
+          (kkey (lookup-key map (kbd "k"))))
+      (define-key map "j" (lookup-key map (kbd "n")))
+      (define-key map "k" (lookup-key map (kbd "p")))
+      (define-key map "n" jkey)
+      (define-key map "p" kkey)
+      (define-key map "`" (lookup-key map (kbd "SPC"))))
+    )
+  )
+
+(defun swap-np-in-magit ()
+  "invoke swap-np for all map related to magit"
+  (interactive)
+  (mapc (lambda (mode) (swap-np mode))
+        '("magit-status-mode"
+          "magit-mode"
+          "magit-staged-section"
+          "magit-unstaged-section"
+          "magit-untracked-section"
+          "magit-stash-section"
+          "magit-remote-section"
+          "magit-commit-section"
+          "magit-branch-section"))
+  (remove-hook 'magit-status-mode-hook 'swap-np-in-magit))
+
+;; (add-hook 'magit-status-mode-hook
+;;           (lambda () (swap-np-in-magit)))
+
+(swap-np "org-agenda-mode")
+(swap-np "package-menu-mode")
+
+
+;; (loop for mode in
+;;       '(magit-status-mode
+;;         org-agenda-mode)
+;;       do
+;;       (add-hook (intern (format "%s-hook" mode))
+;;                 (lambda () (swap-np mode)))
+;;       ;; (eval-after-load mode
+;;       ;;   '(swap-np mode))
+;;       )
+
+(setq evil-leader/in-all-states 1)
+(setq evil-leader/no-prefix-mode-rx '("magit-.*-mode" "gnus-.*-mode" "org-agenda-mode" "package-menu-mode"))
+
 (provide 'init-evil)
