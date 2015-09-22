@@ -13,6 +13,8 @@
 (evil-mode 1)
 (global-evil-leader-mode 1)
 
+(setq evil-move-cursor-back nil) ; move to the end of the line
+
 ;; remove all keybindings from insert-state keymap, use emacs-state when editing
 (setcdr evil-insert-state-map nil)
 
@@ -47,7 +49,7 @@
 
 (evil-leader/set-leader "SPC")
 (evil-leader/set-key
-  "dd" 'sdcv-search-pointer
+  "dd" 'sdcv-search-pointer+
   "dD" 'sdcv-search-pointer
   "di" 'sdcv-search-input+
   "dI" 'sdcv-search-input
@@ -103,6 +105,7 @@
 
   "xm" 'smex
   "xb" 'ido-switch-buffer
+  "kk" 'ido-kill-buffer
   "xk" 'ido-kill-buffer
   "ri" 'yari-helm
   "mx" 'helm-M-x
@@ -128,6 +131,7 @@
   "ff" 'helm-for-files ;; "C-c f"
   "xf" 'helm-find-files
   "y" 'helm-show-kill-ring
+  "B" 'helm-mini
   "bb" 'helm-mini
   "SPC" 'helm-all-mark-rings
 
@@ -212,7 +216,10 @@
   "xx" 'cua-exchange-point-and-mark
 
   "oo" 'switch-window
+  "ee" 'back-to-previous-buffer
   "pb" 'back-to-previous-buffer
+  "|"  'split-window-horizontally
+  "_"  'split-window-vertically-instead
   "wj" 'windmove-down
   "wk" 'windmove-up
   "wh" 'windmove-left
@@ -240,6 +247,16 @@
   "ca" 'org-agenda
   "cn" 'outline-next-visible-heading
   "cp" 'outline-previous-visible-heading
+
+  "gg" 'magit-status
+  "gt" 'ggtags-find-tag-dwim
+  "gr" 'ggtags-find-reference
+  ;; @see https://github.com/pidu/git-timemachine
+  ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
+  "gm" 'git-timemachine-toggle
+  )
+
+(evil-leader/set-key-for-mode 'org-mode
   "cf" 'org-forward-heading-same-level
   "cb" 'org-backward-heading-same-level
   "si" 'org-insert-src-block
@@ -250,14 +267,8 @@
   "xi" 'org-clock-in ; `C-c C-x C-i'
   "xo" 'org-clock-out ; `C-c C-x C-o'
   "cxr" 'org-clock-report ; `C-c C-x C-r'
+  "cxb" 'org-tree-to-indirect-buffer
   "otl" 'org-toggle-link-display
-
-  "gg" 'magit-status
-  "gt" 'ggtags-find-tag-dwim
-  "gr" 'ggtags-find-reference
-  ;; @see https://github.com/pidu/git-timemachine
-  ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
-  "gm" 'git-timemachine-toggle
   )
 
 
